@@ -28,6 +28,26 @@ describe('External API Routes', () => {
       expect(res.statusCode).toEqual(500);
       expect(res.body).toHaveProperty('error', 'Failed to fetch files from external API');
     });
+
+    it('should fetch a non-empty list of files from the external API', async () => {
+      const mockResponse = { files: ['file1.csv', 'file2.csv'] };
+      axios.get.mockResolvedValue({ data: mockResponse });
+
+      const res = await request(app).get('/external/files');
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.files.length).toBeGreaterThan(0);
+    });
+
+    it('should handle empty list of files from the external API', async () => {
+      const mockResponse = { files: [] };
+      axios.get.mockResolvedValue({ data: mockResponse });
+
+      const res = await request(app).get('/external/files');
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.files.length).toEqual(0);
+    });
   });
 
   describe('GET /external/file/:name', () => {
@@ -57,6 +77,16 @@ describe('External API Routes', () => {
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toHaveProperty('error', 'Failed to download file from external API');
+    });
+
+    it('should handle file content properly from the external API', async () => {
+      const mockFileContent = 'file,text,number,hex\ntest1.csv,data,5678,abcd1234';
+      axios.get.mockResolvedValue({ data: mockFileContent });
+
+      const res = await request(app).get('/external/file/test1.csv');
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.text).toContain('test1.csv');
     });
   });
 });
