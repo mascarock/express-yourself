@@ -1,0 +1,12 @@
+{
+  "name": "express-yourself",
+  "version": "1.0.0",
+  "description": "This repository houses the backend API built with Node.js and Express. It serves as the powerhouse for the frontend, providing data through RESTful endpoints, and integrating external API consumption to deliver dynamic content",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
