@@ -1,16 +1,20 @@
 {
   "name": "express-yourself",
   "version": "1.0.0",
-  "description": "This repository houses the backend API built with Node.js and Express. It serves as the powerhouse for the frontend, providing data through RESTful endpoints, and integrating external API consumption to deliver dynamic content",
+  "description": "This repository houses the backend API built with Node.js and Express. It serves as the powerhouse for the frontend, providing data through RESTful endpoints, and integrating external API consumption to deliver dynamic content.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "jest": {
-    "setupFiles": ["<rootDir>/jest.setup.js"]
+    "setupFiles": ["<rootDir>/jest.setup.js"],
+    "collectCoverageFrom": [
+      "controllers/**/*.js",
+      "routes/**/*.js"
+    ]
   },
   "devDependencies": {
     "jest": "^29.7.0",
