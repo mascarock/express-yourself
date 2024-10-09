@@ -58,7 +58,16 @@ describe('External API Routes', () => {
       const res = await request(app).get('/external/file/test1.csv');
 
       expect(res.statusCode).toEqual(200);
-      expect(res.text).toEqual(mockFileContent);
+      expect(res.body).toEqual({
+        file: 'test1.csv',
+        lines: [
+          {
+            text: 'example',
+            number: 1234,
+            hex: 'abcdef',
+          },
+        ],
+      });
     });
 
     it('should return a 404 error if the file is not found in the external API', async () => {
@@ -86,7 +95,35 @@ describe('External API Routes', () => {
       const res = await request(app).get('/external/file/test1.csv');
 
       expect(res.statusCode).toEqual(200);
-      expect(res.text).toContain('test1.csv');
+      expect(res.body).toEqual({
+        file: 'test1.csv',
+        lines: [
+          {
+            text: 'data',
+            number: 5678,
+            hex: 'abcd1234',
+          },
+        ],
+      });
+    });
+
+    it('should skip invalid lines in the CSV content', async () => {
+      const mockFileContent = 'file,text,number,hex\ntest1.csv,data,5678,abcd1234\ninvalid,line\nanother,missing,data';
+      axios.get.mockResolvedValue({ data: mockFileContent });
+
+      const res = await request(app).get('/external/file/test1.csv');
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toEqual({
+        file: 'test1.csv',
+        lines: [
+          {
+            text: 'data',
+            number: 5678,
+            hex: 'abcd1234',
+          },
+        ],
+      });
     });
   });
 });
