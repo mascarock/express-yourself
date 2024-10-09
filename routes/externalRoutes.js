@@ -29,8 +29,8 @@ router.get('/files', async (req, res) => {
     const files = await getFilesFromExternalAPI();
     res.status(200).json({ files });
   } catch (error) {
-    console.error('Error fetching files from external API:', error.message);
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching files from external API:', error);
+    res.status(500).json({ error: 'Failed to fetch files from external API' });
   }
 });
 
@@ -68,6 +68,8 @@ router.get('/files', async (req, res) => {
  *                         type: number
  *                       hex:
  *                         type: string
+ *                 error:
+ *                   type: string
  *       404:
  *         description: File not found.
  *       500:
@@ -76,27 +78,19 @@ router.get('/files', async (req, res) => {
 router.get('/file/:name', async (req, res) => {
   const { name } = req.params;
   try {
-    const fileContent = await getFileFromExternalAPI(name);
-    const lines = fileContent.split('\n').slice(1).map(line => {
-      const [file, text, number, hex] = line.split(',');
-      if (!file || !text || !number || !hex) {
-        return null;
+    const response = await getFileFromExternalAPI(name);
+    if (response.error) {
+      if (response.error === 'File not found') {
+        res.status(404).json(response);
+      } else {
+        res.status(500).json(response);
       }
-      return { text, number: parseInt(number, 10), hex };
-    }).filter(Boolean);
-
-    const response = {
-      file: name,
-      lines,
-    };
-    res.status(200).json(response);
-  } catch (error) {
-    if (error.message === 'File not found') {
-      res.status(404).json({ error: 'File not found' });
     } else {
-      console.error('Error fetching file from external API:', error.message);
-      res.status(500).json({ error: error.message });
+      res.status(200).json(response);
     }
+  } catch (error) {
+    console.error('Error fetching file from external API:', error);
+    res.status(500).json({ error: 'Failed to download file from external API' });
   }
 });
 

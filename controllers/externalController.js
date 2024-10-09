@@ -24,12 +24,37 @@ const getFileFromExternalAPI = async (fileName) => {
         Authorization: externalApiKey,
       },
     });
-    return response.data;
+
+    // Process the CSV content into JSON format as per the schema
+    const lines = response.data
+      .split('\n')
+      .slice(1) // Skip the header row
+      .map(line => {
+        const [file, text, number, hex] = line.split(',');
+        if (!text || isNaN(parseInt(number)) || !hex) {
+          return null; // Skip invalid lines
+        }
+        return { text, number: parseInt(number, 10), hex };
+      })
+      .filter(Boolean); // Remove null values
+
+    return {
+      file: fileName,
+      lines,
+    };
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      throw new Error('File not found');
+      return {
+        file: fileName,
+        lines: [],
+        error: 'File not found',
+      };
     } else {
-      throw new Error('Failed to download file from external API');
+      return {
+        file: fileName,
+        lines: [],
+        error: 'Failed to download file from external API',
+      };
     }
   }
 };
