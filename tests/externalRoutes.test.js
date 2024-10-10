@@ -6,15 +6,15 @@ const axios = require('axios');
 jest.mock('axios');
 
 const app = express();
-app.use('/external', externalRoutes);
+app.use('/', externalRoutes);
 
 describe('External API Routes', () => {
-  describe('GET /external/files', () => {
+  describe('GET /files', () => {
     it('should fetch a list of available files from the external API', async () => {
       const mockResponse = { files: ['test1.csv', 'test2.csv', 'test3.csv'] };
       axios.get.mockResolvedValue({ data: mockResponse });
 
-      const res = await request(app).get('/external/files');
+      const res = await request(app).get('/files');
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual(mockResponse);
@@ -23,7 +23,7 @@ describe('External API Routes', () => {
     it('should return a 500 error if the external API call fails', async () => {
       axios.get.mockRejectedValue(new Error('External API Error'));
 
-      const res = await request(app).get('/external/files');
+      const res = await request(app).get('/files');
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toHaveProperty('error', 'Failed to fetch files from external API');
@@ -33,7 +33,7 @@ describe('External API Routes', () => {
       const mockResponse = { files: ['file1.csv', 'file2.csv'] };
       axios.get.mockResolvedValue({ data: mockResponse });
 
-      const res = await request(app).get('/external/files');
+      const res = await request(app).get('/files');
 
       expect(res.statusCode).toEqual(200);
       expect(res.body.files.length).toBeGreaterThan(0);
@@ -43,19 +43,19 @@ describe('External API Routes', () => {
       const mockResponse = { files: [] };
       axios.get.mockResolvedValue({ data: mockResponse });
 
-      const res = await request(app).get('/external/files');
+      const res = await request(app).get('/files');
 
       expect(res.statusCode).toEqual(200);
       expect(res.body.files.length).toEqual(0);
     });
   });
 
-  describe('GET /external/file/:name', () => {
+  describe('GET /file/:name', () => {
     it('should download a specific file from the external API', async () => {
       const mockFileContent = 'file,text,number,hex\ntest1.csv,example,1234,abcdef';
       axios.get.mockResolvedValue({ data: mockFileContent });
 
-      const res = await request(app).get('/external/file/test1.csv');
+      const res = await request(app).get('/file/test1.csv');
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual({
@@ -73,7 +73,7 @@ describe('External API Routes', () => {
     it('should return a 404 error if the file is not found in the external API', async () => {
       axios.get.mockRejectedValue({ response: { status: 404 } });
 
-      const res = await request(app).get('/external/file/nonexistent.csv');
+      const res = await request(app).get('/file/nonexistent.csv');
 
       expect(res.statusCode).toEqual(404);
       expect(res.body).toHaveProperty('error', 'File not found');
@@ -82,7 +82,7 @@ describe('External API Routes', () => {
     it('should return a 500 error if there is an error downloading the file', async () => {
       axios.get.mockRejectedValue(new Error('External API Error'));
 
-      const res = await request(app).get('/external/file/test1.csv');
+      const res = await request(app).get('/file/test1.csv');
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toHaveProperty('error', 'Failed to download file from external API');
@@ -92,7 +92,7 @@ describe('External API Routes', () => {
       const mockFileContent = 'file,text,number,hex\ntest1.csv,data,5678,abcd1234';
       axios.get.mockResolvedValue({ data: mockFileContent });
 
-      const res = await request(app).get('/external/file/test1.csv');
+      const res = await request(app).get('/file/test1.csv');
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual({
@@ -111,7 +111,7 @@ describe('External API Routes', () => {
       const mockFileContent = 'file,text,number,hex\ntest1.csv,data,5678,abcd1234\ninvalid,line\nanother,missing,data';
       axios.get.mockResolvedValue({ data: mockFileContent });
 
-      const res = await request(app).get('/external/file/test1.csv');
+      const res = await request(app).get('/file/test1.csv');
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual({
