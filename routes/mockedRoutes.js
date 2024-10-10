@@ -1,7 +1,7 @@
-const express = require('express');
-const { getMockedFiles, getMockedFileByName } = require('../controllers/mockedController');
+const express = require('express')
+const { getMockedFiles, getMockedFileByName } = require('../controllers/mockedController')
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -22,7 +22,7 @@ const router = express.Router();
  *                   items:
  *                     type: string
  */
-router.get('/files', getMockedFiles);
+router.get('/files', getMockedFiles)
 
 /**
  * @swagger
@@ -49,6 +49,6 @@ router.get('/files', getMockedFiles);
  *       500:
  *         description: Error occurred while downloading the file.
  */
-router.get('/file/:name', getMockedFileByName);
+router.get('/file/:name', getMockedFileByName)
 
-module.exports = router;
+module.exports = router
