@@ -2,7 +2,7 @@
   "name": "express-yourself",
   "version": "1.0.0",
   "description": "This repository houses the backend API built with Node.js and Express. It serves as the powerhouse for the frontend, providing data through RESTful endpoints, and integrating external API consumption to deliver dynamic content.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "lint": "standard",
     "test": "jest --coverage"
