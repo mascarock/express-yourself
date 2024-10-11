@@ -45,17 +45,15 @@ const getFileFromExternalAPI = async (fileName) => {
     };
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      return {
-        file: fileName,
-        lines: [],
-        error: 'File not found'
-      };
+      // Explicitly throw an error with status 404
+      const notFoundError = new Error('File not found');
+      notFoundError.status = 404;
+      throw notFoundError;
     } else {
-      return {
-        file: fileName,
-        lines: [],
-        error: 'Failed to download file from external API'
-      };
+      // Throw a general error for other types of issues
+      const generalError = new Error('Failed to download file from external API');
+      generalError.status = 500;
+      throw generalError;
     }
   }
 };

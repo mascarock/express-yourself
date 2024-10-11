@@ -1,7 +1,7 @@
-const express = require('express')
-const { getFilesFromExternalAPI, getFileFromExternalAPI } = require('../controllers/externalController')
+const express = require('express');
+const { getFilesFromExternalAPI, getFileFromExternalAPI } = require('../controllers/externalController');
 
-const router = express.Router()
+const router = express.Router();
 
 /**
  * @swagger
@@ -26,13 +26,74 @@ const router = express.Router()
  */
 router.get('/files', async (req, res) => {
   try {
-    const files = await getFilesFromExternalAPI()
-    res.status(200).json({ files })
+    const files = await getFilesFromExternalAPI();
+    res.status(200).json({ files });
   } catch (error) {
-    console.error('Error fetching files from external API:', error)
-    res.status(500).json({ error: 'Failed to fetch files from external API' })
+    console.error('Error fetching files from external API:', error);
+    res.status(500).json({ error: 'Failed to fetch files from external API' });
   }
-})
+});
+
+/**
+ * @swagger
+ * /files/data:
+ *   get:
+ *     summary: Fetch and aggregate data from all available files.
+ *     description: Fetches data from all available files, processes it, and returns a JSON response.
+ *     responses:
+ *       200:
+ *         description: Successfully fetched and aggregated data from available files.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   file:
+ *                     type: string
+ *                   lines:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         text:
+ *                           type: string
+ *                         number:
+ *                           type: number
+ *                         hex:
+ *                           type: string
+ *       500:
+ *         description: Error occurred while fetching the files.
+ */
+router.get('/files/data', async (req, res) => {
+  try {
+    const files = await getFilesFromExternalAPI();
+    const aggregatedData = [];
+
+    // Loop through each file and try to fetch its content
+    for (const file of files) {
+      try {
+        const fileData = await getFileFromExternalAPI(file);
+
+        // Only add files that have non-empty lines
+        if (fileData && fileData.lines && fileData.lines.length > 0) {
+          aggregatedData.push(fileData);
+        } else {
+          console.warn(`Skipping file ${file}: No valid data found.`);
+        }
+      } catch (error) {
+        // Skip files that could not be found or fetched
+        console.warn(`Skipping file ${file} due to an error: ${error.message}`);
+      }
+    }
+
+    res.status(200).json(aggregatedData);
+  } catch (error) {
+    console.error('Error fetching file data from external API:', error);
+    res.status(500).json({ error: 'Failed to fetch files data from external API' });
+  }
+});
 
 /**
  * @swagger
@@ -74,22 +135,18 @@ router.get('/files', async (req, res) => {
  *         description: Error occurred while downloading the file.
  */
 router.get('/file/:name', async (req, res) => {
-  const { name } = req.params
+  const { name } = req.params;
   try {
-    const response = await getFileFromExternalAPI(name)
-    if (response.error) {
-      if (response.error === 'File not found') {
-        res.status(404).json(response)
-      } else {
-        res.status(500).json(response)
-      }
-    } else {
-      res.status(200).json(response)
-    }
+    const response = await getFileFromExternalAPI(name);
+    res.status(200).json(response);
   } catch (error) {
-    console.error('Error fetching file from external API:', error)
-    res.status(500).json({ error: 'Failed to download file from external API' })
+    if (error.status === 404) {
+      res.status(404).json({ error: 'File not found' });
+    } else {
+      res.status(500).json({ error: 'Failed to download file from external API' });
+    }
   }
-})
+});
 
-module.exports = router
+
+module.exports = router;
