@@ -1,7 +1,7 @@
-const express = require('express');
-const { getFilesFromExternalAPI, getFileFromExternalAPI } = require('../controllers/externalController');
+const express = require('express')
+const { getFilesFromExternalAPI, getFileFromExternalAPI } = require('../controllers/externalController')
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -26,13 +26,13 @@ const router = express.Router();
  */
 router.get('/files', async (req, res) => {
   try {
-    const files = await getFilesFromExternalAPI();
-    res.status(200).json({ files });
+    const files = await getFilesFromExternalAPI()
+    res.status(200).json({ files })
   } catch (error) {
-    console.error('Error fetching files from external API:', error);
-    res.status(500).json({ error: 'Failed to fetch files from external API' });
+    console.error('Error fetching files from external API:', error)
+    res.status(500).json({ error: 'Failed to fetch files from external API' })
   }
-});
+})
 
 /**
  * @swagger
@@ -68,32 +68,32 @@ router.get('/files', async (req, res) => {
  */
 router.get('/files/data', async (req, res) => {
   try {
-    const files = await getFilesFromExternalAPI();
-    const aggregatedData = [];
+    const files = await getFilesFromExternalAPI()
+    const aggregatedData = []
 
     // Loop through each file and try to fetch its content
     for (const file of files) {
       try {
-        const fileData = await getFileFromExternalAPI(file);
+        const fileData = await getFileFromExternalAPI(file)
 
         // Only add files that have non-empty lines
         if (fileData && fileData.lines && fileData.lines.length > 0) {
-          aggregatedData.push(fileData);
+          aggregatedData.push(fileData)
         } else {
-          console.warn(`Skipping file ${file}: No valid data found.`);
+          console.warn(`Skipping file ${file}: No valid data found.`)
         }
       } catch (error) {
         // Skip files that could not be found or fetched
-        console.warn(`Skipping file ${file} due to an error: ${error.message}`);
+        console.warn(`Skipping file ${file} due to an error: ${error.message}`)
       }
     }
 
-    res.status(200).json(aggregatedData);
+    res.status(200).json(aggregatedData)
   } catch (error) {
-    console.error('Error fetching file data from external API:', error);
-    res.status(500).json({ error: 'Failed to fetch files data from external API' });
+    console.error('Error fetching file data from external API:', error)
+    res.status(500).json({ error: 'Failed to fetch files data from external API' })
   }
-});
+})
 
 /**
  * @swagger
@@ -135,18 +135,17 @@ router.get('/files/data', async (req, res) => {
  *         description: Error occurred while downloading the file.
  */
 router.get('/file/:name', async (req, res) => {
-  const { name } = req.params;
+  const { name } = req.params
   try {
-    const response = await getFileFromExternalAPI(name);
-    res.status(200).json(response);
+    const response = await getFileFromExternalAPI(name)
+    res.status(200).json(response)
   } catch (error) {
     if (error.status === 404) {
-      res.status(404).json({ error: 'File not found' });
+      res.status(404).json({ error: 'File not found' })
     } else {
-      res.status(500).json({ error: 'Failed to download file from external API' });
+      res.status(500).json({ error: 'Failed to download file from external API' })
     }
   }
-});
+})
 
-
-module.exports = router;
+module.exports = router

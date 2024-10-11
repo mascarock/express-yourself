@@ -20,7 +20,7 @@ const ORIGIN = process.env.REACT_APP || 'http://localhost:3000'
 
 // Allow requests from localhost:3000 (frontend)
 app.use(cors({ origin: ORIGIN }))
-console.log('CORS enabled for:', ORIGIN);
+console.log('CORS enabled for:', ORIGIN)
 
 // Swagger setup
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
