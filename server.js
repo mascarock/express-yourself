@@ -16,9 +16,11 @@ const externalRoutes = require('./routes/externalRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 5005
+const ORIGIN = process.env.REACT_APP || 'http://localhost:3000'
 
 // Allow requests from localhost:3000 (frontend)
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors({ origin: ORIGIN }))
+console.log('CORS enabled for:', ORIGIN);
 
 // Swagger setup
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
