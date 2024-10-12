@@ -12,6 +12,7 @@ This repository houses the backend API built with **Node.js** and **Express**. I
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Running the Server](#running-the-server)
+  - [Docker Instructions](#docker-instructions)
 - [Testing](#testing)
   - [Running Tests](#running-tests)
   - [Running Test Coverage](#running-test-coverage)
@@ -25,6 +26,7 @@ This repository houses the backend API built with **Node.js** and **Express**. I
 - [License](#license)
 
 ---
+[Frontend Repository](https://github.com/mascarock/frontend-fiesta)
 
 ## Getting Started
 
@@ -62,6 +64,28 @@ node .
 ```
 
 The server will start on **[localhost:5005](http://localhost:5005)** by default.
+
+---
+
+## Docker Instructions
+
+### Building the Docker Image
+
+To build the Docker image for the backend, run the following command from the project root directory:
+
+```bash
+docker build -t express-yourself-backend .
+```
+
+### Running the Docker Container
+
+To run the Docker container for the backend, use the following command:
+
+```bash
+docker run -p 5005:5005 --name backend-container express-yourself-backend
+```
+
+This will start the backend container and expose it on **port 5005** on your local machine.
 
 ---
 
