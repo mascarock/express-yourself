@@ -24,12 +24,12 @@ describe('External API Routes (Mocha and Chai)', () => {
     getStub.restore()
   })
 
-  describe('GET /files', () => {
+  describe('GET /files/list', () => {
     it('should fetch a list of available files from the external API', async () => {
       const mockResponse = { files: ['test1.csv', 'test2.csv', 'test3.csv'] }
       getStub.resolves({ data: mockResponse }) // Use Sinon to resolve the Promise
 
-      const res = await chai.request(app).get('/files')
+      const res = await chai.request(app).get('/files/list')
 
       expect(res).to.have.status(200)
       expect(res.body).to.deep.equal(mockResponse)
@@ -38,7 +38,7 @@ describe('External API Routes (Mocha and Chai)', () => {
     it('should return a 500 error if the external API call fails', async () => {
       getStub.rejects(new Error('External API Error')) // Use Sinon to reject the Promise
 
-      const res = await chai.request(app).get('/files')
+      const res = await chai.request(app).get('/files/list')
 
       expect(res).to.have.status(500)
       expect(res.body).to.have.property('error', 'Failed to fetch files from external API')
@@ -48,7 +48,7 @@ describe('External API Routes (Mocha and Chai)', () => {
       const mockResponse = { files: ['file1.csv', 'file2.csv'] }
       getStub.resolves({ data: mockResponse })
 
-      const res = await chai.request(app).get('/files')
+      const res = await chai.request(app).get('/files/list')
 
       expect(res).to.have.status(200)
       expect(res.body.files).to.have.length.greaterThan(0)
@@ -58,7 +58,7 @@ describe('External API Routes (Mocha and Chai)', () => {
       const mockResponse = { files: [] }
       getStub.resolves({ data: mockResponse })
 
-      const res = await chai.request(app).get('/files')
+      const res = await chai.request(app).get('/files/list')
 
       expect(res).to.have.status(200)
       expect(res.body.files).to.have.lengthOf(0)

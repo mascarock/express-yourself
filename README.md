@@ -19,6 +19,7 @@ This repository houses the backend API built with **Node.js** and **Express**. I
   - [Running Linter](#running-linter)
   - [Fixing Linting Issues](#fixing-linting-issues)
 - [API Documentation](#api-documentation)
+- [API Formatting](#api-formatting)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -132,6 +133,34 @@ The API provides endpoints to interact with external data sources and deliver dy
 
 - Access the Swagger UI at **[http://localhost:5005/api-docs](http://localhost:5005/api-docs)** when the server is running.
 - Refer to the `swagger.json` or `swagger.yaml` files for endpoint specifications.
+
+---
+
+## API Formatting
+
+All API endpoints return data in **JSON** format. Below are some guidelines for API formatting:
+
+- **Standard JSON Structure:** All responses are returned in a structured JSON format, typically including keys like `status`, `data`, and `message`.
+- **Success Responses:** Successful API calls generally return a `status` of `200` and include a `data` object containing the requested information.
+- **Error Responses:** Error messages are formatted as JSON objects with `status` codes (`400`, `404`, `500`, etc.) and a descriptive `message` key to provide more details about the error.
+- **Content-Type Header:** Ensure that requests include the `Content-Type: application/json` header when sending data to the API.
+
+**Example Response Format:**
+
+```json
+{
+  "status": 200,
+  "data": {
+    "files": [
+      "file1.csv",
+      "file2.csv"
+    ]
+  },
+  "message": "Files retrieved successfully"
+}
+```
+
+This standard format ensures consistency across all endpoints, making it easier to handle responses on the frontend.
 
 ---
 

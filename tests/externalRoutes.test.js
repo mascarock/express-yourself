@@ -9,12 +9,12 @@ const app = express()
 app.use('/', externalRoutes)
 
 describe('External API Routes', () => {
-  describe('GET /files', () => {
+  describe('GET /files/list', () => {
     it('should fetch a list of available files from the external API', async () => {
       const mockResponse = { files: ['test1.csv', 'test2.csv', 'test3.csv'] }
       axios.get.mockResolvedValue({ data: mockResponse })
 
-      const res = await request(app).get('/files')
+      const res = await request(app).get('/files/list')
 
       expect(res.statusCode).toEqual(200)
       expect(res.body).toEqual(mockResponse)
@@ -23,7 +23,7 @@ describe('External API Routes', () => {
     it('should return a 500 error if the external API call fails', async () => {
       axios.get.mockRejectedValue(new Error('External API Error'))
 
-      const res = await request(app).get('/files')
+      const res = await request(app).get('/files/list')
 
       expect(res.statusCode).toEqual(500)
       expect(res.body).toHaveProperty('error', 'Failed to fetch files from external API')
@@ -33,7 +33,7 @@ describe('External API Routes', () => {
       const mockResponse = { files: ['file1.csv', 'file2.csv'] }
       axios.get.mockResolvedValue({ data: mockResponse })
 
-      const res = await request(app).get('/files')
+      const res = await request(app).get('/files/list')
 
       expect(res.statusCode).toEqual(200)
       expect(res.body.files.length).toBeGreaterThan(0)
@@ -43,7 +43,7 @@ describe('External API Routes', () => {
       const mockResponse = { files: [] }
       axios.get.mockResolvedValue({ data: mockResponse })
 
-      const res = await request(app).get('/files')
+      const res = await request(app).get('/files/list')
 
       expect(res.statusCode).toEqual(200)
       expect(res.body.files.length).toEqual(0)
