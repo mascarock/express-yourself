@@ -5,7 +5,7 @@ const router = express.Router()
 
 /**
  * @swagger
- * /files:
+ * /files/list:
  *   get:
  *     summary: Fetch a list of available files from the external API.
  *     description: Fetches a list of available files from the external API.
@@ -24,7 +24,7 @@ const router = express.Router()
  *       500:
  *         description: Error occurred while fetching the list of files.
  */
-router.get('/files', async (req, res) => {
+router.get('/files/list', async (req, res) => {
   try {
     const files = await getFilesFromExternalAPI()
     res.status(200).json({ files })
