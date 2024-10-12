@@ -2,6 +2,16 @@
 
 This repository houses the backend API built with **Node.js** and **Express**. It serves as the powerhouse for the frontend, providing data through RESTful endpoints and integrating external API consumption to deliver dynamic content.
 
+
+
+
+
+https://github.com/user-attachments/assets/f0ab6ae8-8491-4d40-a698-72536d0ed8f2
+
+
+
+
+
 ## Author
 
 **mascarock**
@@ -92,6 +102,7 @@ This will start the backend container and expose it on **port 5005** on your loc
 ## Testing
 
 ### Running Tests
+<img width="1031" alt="image" src="https://github.com/user-attachments/assets/f7d4b3da-c6ef-49eb-a823-fbde69d28663">
 
 Run the test suite using **Mocha** and **Chai**:
 
@@ -102,6 +113,9 @@ npm test
 This command executes all tests located in the `tests` directory, allowing you to verify that all endpoints and functionalities are working as expected.
 
 ### Running Test Coverage
+
+<img width="994" alt="image" src="https://github.com/user-attachments/assets/d0a0bebd-d1fa-46ca-860d-e1ebaa513eb2">
+
 
 Launch the test coverage report using **Jest**:
 
